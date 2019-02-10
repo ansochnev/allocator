@@ -4,6 +4,7 @@
 #include <utility>
 
 #include "alloc.h"
+#include "stack.h"
 
 
 int factorial(int n) {
@@ -41,6 +42,23 @@ int main() {
     fill(&map_alloc, 10);
     std::cout << "std::map with my allocator:" << std::endl;
     print(map_alloc);
+
+    Stack<int> stack;
+    for(int i = 0; i < 10; i++) {
+        stack.push(i);
+    }
+
+    Stack<int, Allocator<int, 10>> stack_alloc;
+    for(int i = 0; i < 10; i++) {
+        stack_alloc.push(i);
+    }
+
+    std::cout << "my stack with my allocator:" << std::endl;
+    while(!stack_alloc.empty()) {
+        std::cout << stack_alloc.top() << " ";
+        stack_alloc.pop();
+    }
+    std::cout << std::endl;
     
     return 0; 
 }
