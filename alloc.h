@@ -1,9 +1,23 @@
+#include <cstdlib>
+#include <new>
+#include <utility>
+
+
 template<typename T, std::size_t N>
 class Allocator {
 
 private:
     T* buffer;
     T* offset;
+
+    void reserve(std::size_t n) {
+        auto p = std::malloc(n * sizeof(T));
+        if(!p) {
+            throw std::bad_alloc();
+        }
+        buffer = reinterpret_cast<T*>(p);
+        offset = buffer;    
+    }
 
 public:
     using value_type = T;
@@ -14,15 +28,6 @@ public:
     };
 
     Allocator() : buffer(nullptr), offset(nullptr) {}
-
-    void reserve(std::size_t n) {
-        auto p = std::malloc(n * sizeof(T));
-        if(!p) {
-            throw std::bad_alloc();
-        }
-        buffer = reinterpret_cast<T*>(p);
-        offset = buffer;    
-    }
 
     T* allocate(std::size_t n) {
         if(!buffer) {
