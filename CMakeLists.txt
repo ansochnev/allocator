@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.2)
 project(allocator VERSION 1.0.$ENV{TRAVIS_BUILD_NUMBER})
 
 add_executable(allocator main.cpp)
+add_executable(alloc_test alloc_test.cpp)
 
-set_target_properties(allocator PROPERTIES
+set_target_properties(allocator alloc_test PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
     COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
@@ -13,6 +14,12 @@ set_target_properties(allocator PROPERTIES
 ################################################################################
 
 install(TARGETS allocator RUNTIME DESTINATION bin)
+
+################################################################################
+
+enable_testing()
+
+add_test(alloc_test alloc_test)
 
 ################################################################################
 
