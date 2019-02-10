@@ -4,7 +4,7 @@
 
 
 template<typename T, std::size_t N>
-class Allocator {
+class StackAllocator {
 
 private:
     T* buffer;
@@ -24,30 +24,26 @@ public:
 
     template<typename U>
     struct rebind {
-        using other = Allocator<U, N>;
+        using other = StackAllocator<U, N>;
     };
 
-    Allocator() : buffer(nullptr), offset(nullptr) {}
+    StackAllocator() { 
+        reserve(N); 
+    }
 
     T* allocate(std::size_t n) {
-        if(!buffer) {
-            reserve(N);
-        }
         if(offset + n > buffer + N) {
             throw std::bad_alloc();
         }
-        auto p = offset;
+        T* p = offset;
         offset += n;        
-        return reinterpret_cast<T*>(p);
+        return p;
     }
 
-    void deallocate(T* p, std::size_t n) {
-        if(p == buffer) {
-            std::free(buffer);
-            buffer = nullptr;
-            return;
+    void deallocate([[maybe_unused]] T* p, std::size_t n) {
+        if(offset > buffer) {
+            offset -= n;
         }
-        offset -= n;
     }
 
     template<class U, class... Args>
@@ -58,5 +54,12 @@ public:
     template<class U>
     void destroy(U* p) {
         p->~U();
+    }
+
+    ~StackAllocator() {
+        while(offset-- > buffer) {
+            destroy(offset);
+        }
+        std::free(buffer);
     }
 };

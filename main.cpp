@@ -36,7 +36,7 @@ int main() {
 
     std::map<int, int, 
         std::less<int>, 
-        Allocator< std::pair<const int, int>, 10 >
+        StackAllocator< std::pair<const int, int>, 10 >
     > map_alloc;
 
     fill(&map_alloc, 10);
@@ -48,7 +48,7 @@ int main() {
         stack.push(i);
     }
 
-    Stack<int, Allocator<int, 10>> stack_alloc;
+    Stack<int, StackAllocator<int, 10>> stack_alloc;
     for(int i = 0; i < 10; i++) {
         stack_alloc.push(i);
     }
