@@ -14,51 +14,61 @@ int factorial(int n) {
     return n * factorial(n - 1);
 }
 
-template<typename M> 
-void fill(M* map, int n) {
+template<typename... Types> 
+void fill(std::map<Types...>* map, int n) {
     for(int i = 0; i < n; i++) {
         (*map)[i] = factorial(i);
     }
 }
 
-template<typename M>
-void print(const M& map) {
+template<typename... Types>
+void print(const std::map<Types...>& map) {
     for(auto p : map) {
         std::cout << p.first << " " << p.second << std::endl;
     }
 }
 
+template<typename... Types> 
+void fill(Stack<Types...>* stack, int n) {
+    for(int i = 0; i < n; i++) {
+        stack->push(i);
+    }
+}
+
+template<typename... Types>
+void print(Stack<Types...>* stack) {
+    while(!stack->empty()) {
+        std::cout << stack->top() << " ";
+        stack->pop();
+    }
+    std::cout << std::endl;
+}
+
 int main() {
 
+    const int n = 10;
+
     std::map<int, int> map;
-    fill(&map, 10);
+    fill(&map, n);
     // print(map);
 
     std::map<int, int, 
         std::less<int>, 
-        StackAllocator< std::pair<const int, int>, 10 >
+        StackAllocator< std::pair<const int, int>, n >
     > map_alloc;
 
-    fill(&map_alloc, 10);
+    fill(&map_alloc, n);
     std::cout << "std::map with my allocator:" << std::endl;
     print(map_alloc);
 
     Stack<int> stack;
-    for(int i = 0; i < 10; i++) {
-        stack.push(i);
-    }
+    fill(&stack, n);
+    // print(&stack);
 
-    Stack<int, StackAllocator<int, 10>> stack_alloc;
-    for(int i = 0; i < 10; i++) {
-        stack_alloc.push(i);
-    }
-
+    Stack<int, StackAllocator<int, n>> stack_alloc;
+    fill(&stack_alloc, n);
     std::cout << "my stack with my allocator:" << std::endl;
-    while(!stack_alloc.empty()) {
-        std::cout << stack_alloc.top() << " ";
-        stack_alloc.pop();
-    }
-    std::cout << std::endl;
+    print(&stack_alloc);
     
     return 0; 
 }
