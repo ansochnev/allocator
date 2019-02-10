@@ -6,3 +6,10 @@ script:
   - cmake .
   - cmake --build .
   - cmake --build . --target test
+  - cmake --build . --target package
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - curl -T allocator-1.0.$TRAVIS_BUILD_NUMBER.deb -uansochnev:$BINTRAY_API_KEY "https://api.bintray.com/content/ansochnev/otus-cpp/allocator/$TRAVIS_BUILD_NUMBER/pool/main/h3/allocator-1.0.$TRAVIS_BUILD_NUMBER.deb;deb_distribution=homework;deb_component=main;deb_architecture=amd64;publish=1"
