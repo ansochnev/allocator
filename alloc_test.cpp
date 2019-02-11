@@ -2,7 +2,7 @@
 #include "alloc.h"
 
 int main() {
-    StackAllocator<int, 3> alloc;
+    StackAllocator<int> alloc(3);
     
     int* p = alloc.allocate(3);
 

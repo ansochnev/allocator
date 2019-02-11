@@ -52,11 +52,8 @@ int main() {
     fill(&map, n);
     // print(map);
 
-    std::map<int, int, 
-        std::less<int>, 
-        StackAllocator< std::pair<const int, int>, n >
-    > map_alloc;
-
+    StackAllocator< std::pair<const int, int> > alloc(n);
+    std::map<int, int, std::less<int>, decltype(alloc)> map_alloc(alloc);
     fill(&map_alloc, n);
     std::cout << "std::map with my allocator:" << std::endl;
     print(map_alloc);
@@ -65,7 +62,8 @@ int main() {
     fill(&stack, n);
     // print(&stack);
 
-    Stack<int, StackAllocator<int, n>> stack_alloc;
+    StackAllocator<int> all(n);
+    Stack<int, StackAllocator<int>> stack_alloc(all);
     fill(&stack_alloc, n);
     std::cout << "my stack with my allocator:" << std::endl;
     print(&stack_alloc);

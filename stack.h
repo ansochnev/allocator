@@ -11,11 +11,16 @@ private:
         Node(T elem, Node* next) : elem(elem), next(next) {}
     };
 
-    typename Allocator::template rebind<Node>::other nodeAllocator;
+    // Some kind of magic.
+    using NodeAllocator = typename Allocator::template rebind<Node>::other;
+    
+    NodeAllocator nodeAllocator;
     Node* head;
 
 public:
     Stack() : head(nullptr) {}
+    
+    Stack(const Allocator& alloc) : nodeAllocator(alloc), head(nullptr) {}
 
     void push(T elem) {
         Node* pNode = nodeAllocator.allocate(1); 
