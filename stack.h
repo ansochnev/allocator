@@ -22,7 +22,30 @@ public:
     
     Stack(const Allocator& alloc) : nodeAllocator(alloc), head(nullptr) {}
 
-    void push(T elem) {
+    // Some strange code:)
+    Stack(const Stack& s) : nodeAllocator(s.nodeAllocator), head(nullptr) {
+        Stack tmp;
+        for(Node* it = s.head; it; it = it->next) {
+            tmp.push(it->elem);
+        }
+        for(; !tmp.empty(); tmp.pop()) {
+            push(tmp.top());
+        }
+    }
+
+    Stack(Stack&& s) 
+        : nodeAllocator(std::move(s.nodeAllocator)), head(s.head) 
+    {
+        s.head = nullptr;
+    }
+
+    void push(const T& elem) {
+        Node* pNode = nodeAllocator.allocate(1); 
+        nodeAllocator.construct(pNode, elem, head);
+        head = pNode;
+    }
+
+    void push(T&& elem) {
         Node* pNode = nodeAllocator.allocate(1); 
         nodeAllocator.construct(pNode, elem, head);
         head = pNode;

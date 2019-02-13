@@ -54,6 +54,18 @@ public:
     StackAllocator(std::size_t n) 
         : Arena(n), buffer(nullptr), offset(nullptr) {}
 
+    // We MUST NOT copy the memory.
+    StackAllocator(const StackAllocator& a) 
+        : Arena(a), buffer(nullptr), offset(nullptr) {}
+    
+    // But we CAN move it. Take care your legs! 
+    StackAllocator(StackAllocator&& a) : Arena(a) {
+        buffer = a.buffer;
+        offset = a.offset;
+        a.buffer = nullptr;
+        a.offset = nullptr;
+    }
+
     // This constructor is need to be used by std::map(const Allocator& alloc)
     // It looks strange, so use the constructor defined bellow.
     // template<typename U>
