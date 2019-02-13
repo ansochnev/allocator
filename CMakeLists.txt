@@ -7,7 +7,7 @@ add_executable(alloc_test alloc_test.cpp)
 add_executable(stack_test stack_test.cpp)
 
 set_target_properties(allocator alloc_test stack_test PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     COMPILE_OPTIONS "-Wpedantic;-Wall;-Wextra"
 )
